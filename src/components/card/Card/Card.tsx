@@ -7,17 +7,33 @@ import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import RestoreIcon from "@mui/icons-material/Restore";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import {
+  deleteTodo,
+  selectEditingTodoId,
+  setEditingTodoId,
+  updateTodo,
+} from "../../../store/appSlice";
+import { TTodoItem } from "../../../types";
 
 interface ICardProps {
-  id: string;
-  title: string;
-  isEditMode?: boolean;
+  todo: {
+    id: string;
+    title: string;
+  };
 }
 
 export const Card = (props: ICardProps) => {
-  const { title, isEditMode = false } = props;
+  const { todo } = props;
+
+  const dispatch = useAppDispatch();
+  const editingTodoId = useAppSelector(selectEditingTodoId);
+  const isEditMode = editingTodoId === todo.id;
 
   const [showControls, setShowControls] = useState(false);
+  const [todoData, setTodoData] = useState<Omit<TTodoItem, "id">>({
+    title: todo.title,
+  });
 
   const onMouseEnter = () => {
     setShowControls(true);
@@ -27,20 +43,56 @@ export const Card = (props: ICardProps) => {
     setShowControls(false);
   };
 
+  const onTitleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    setTodoData({ ...todoData, [evt.target.name]: evt.target.value });
+  };
+
+  // Editing
+  const onDoneClick = () => {
+    dispatch(setEditingTodoId(null));
+    if (todo.title !== todoData.title) {
+      dispatch(updateTodo({ id: todo.id, ...todoData }));
+    }
+  };
+  const onRestoreClick = () => {
+    setTodoData(todo);
+  };
+  const onDeleteClick = () => {
+    dispatch(deleteTodo(todo.id));
+    if (!!editingTodoId) {
+      dispatch(setEditingTodoId(null));
+    }
+  };
+  const onEditClick = () => {
+    dispatch(setEditingTodoId(todo.id));
+  };
+
+  const disableRestoreButton = todo.title === todoData.title;
+
   if (isEditMode) {
     return (
       <div className={styles.card}>
-        <TextField label="Что сделать?" variant="standard" fullWidth />
+        <TextField
+          label="Что сделать?"
+          variant="standard"
+          fullWidth
+          name="title"
+          value={todoData.title}
+          onChange={onTitleChange}
+        />
         <div className={styles.editButtons}>
-          <IconButton>
+          <IconButton onClick={onDeleteClick}>
             <DeleteIcon />
           </IconButton>
-          {!!title && (
-            <IconButton>
+          {!!todo.title && (
+            <IconButton
+              onClick={onRestoreClick}
+              disabled={disableRestoreButton}
+            >
               <RestoreIcon />
             </IconButton>
           )}
-          <IconButton>
+          <IconButton onClick={onDoneClick}>
             <CheckIcon />
           </IconButton>
         </div>
@@ -56,15 +108,25 @@ export const Card = (props: ICardProps) => {
     >
       {showControls && (
         <div className={styles.controls}>
-          <Typography variant="caption" className={styles.controlText}>
+          <Typography
+            variant="caption"
+            component="a"
+            className={styles.controlText}
+            onClick={onEditClick}
+          >
             Edit
           </Typography>
-          <Typography variant="caption" className={styles.controlText}>
+          <Typography
+            variant="caption"
+            component="a"
+            className={styles.controlText}
+            onClick={onDeleteClick}
+          >
             Delete
           </Typography>
         </div>
       )}
-      <Typography variant="subtitle1">{title}</Typography>
+      <Typography variant="subtitle1">{todo.title}</Typography>
     </div>
   );
 };

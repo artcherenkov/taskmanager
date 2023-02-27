@@ -3,15 +3,33 @@ import IconButton from "@mui/material/IconButton";
 
 import { AddIcon } from "../../icons";
 import styles from "./AddNewCard.module.css";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import {
+  createTodo,
+  selectEditingTodoId,
+  setEditingTodoId,
+} from "../../../store/appSlice";
+import { nanoid } from "nanoid";
 
-interface IAddNewCard {
-  disabled: boolean;
-}
+const createEmptyTodo = () => ({
+  id: nanoid(),
+  title: "",
+});
 
-export const AddNewCard = ({ disabled }: IAddNewCard) => {
+export const AddNewCard = () => {
+  const dispatch = useAppDispatch();
+  const editingTaskId = useAppSelector(selectEditingTodoId);
+  const disabled = !!editingTaskId;
+
+  const onClick = () => {
+    const newTodo = createEmptyTodo();
+    dispatch(createTodo(newTodo));
+    dispatch(setEditingTodoId(newTodo.id));
+  };
+
   return (
     <div className={styles.card}>
-      <IconButton size="large" disabled={disabled}>
+      <IconButton size="large" disabled={disabled} onClick={onClick}>
         <AddIcon size={32} color={disabled ? "#f1f1f1" : "#737373"} />
       </IconButton>
     </div>

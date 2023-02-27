@@ -1,28 +1,25 @@
-import React from "react";
-import { nanoid } from "nanoid";
+import React, { useEffect } from "react";
 
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { selectTodos, setTodos } from "../../store/appSlice";
+import { data } from "../../data";
 import { AddNewCard, Card } from "../card";
 import styles from "./App.module.css";
 
-type TCardData = { id: string; title: string };
-const data: TCardData[] = [
-  { id: nanoid(), title: "Сходить погулять" },
-  { id: nanoid(), title: "Выпить таблетки" },
-  { id: nanoid(), title: "Почесать репу" },
-  { id: nanoid(), title: "Покормить собаку" },
-  { id: nanoid(), title: "Купить хлеб" },
-  { id: "1", title: "" },
-];
-
 export const App = () => {
-  const editingTaskId = "1";
+  const dispatch = useAppDispatch();
+  const todos = useAppSelector(selectTodos);
+
+  useEffect(() => {
+    dispatch(setTodos(data));
+  }, []);
 
   return (
     <div className={styles.root}>
-      {data.map((d) => (
-        <Card key={d.id} {...d} isEditMode={editingTaskId === d.id} />
+      {todos.map((t) => (
+        <Card key={t.id} todo={t} />
       ))}
-      <AddNewCard disabled={!!editingTaskId} />
+      <AddNewCard />
     </div>
   );
 };
