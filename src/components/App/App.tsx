@@ -1,23 +1,28 @@
 import React from "react";
+import { nanoid } from "nanoid";
 
-function App() {
+import { AddNewCard, Card } from "../card";
+import styles from "./App.module.css";
+
+type TCardData = { id: string; title: string };
+const data: TCardData[] = [
+  { id: nanoid(), title: "Сходить погулять" },
+  { id: nanoid(), title: "Выпить таблетки" },
+  { id: nanoid(), title: "Почесать репу" },
+  { id: nanoid(), title: "Покормить собаку" },
+  { id: nanoid(), title: "Купить хлеб" },
+  { id: "1", title: "" },
+];
+
+export const App = () => {
+  const editingTaskId = "1";
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={styles.root}>
+      {data.map((d) => (
+        <Card key={d.id} {...d} isEditMode={editingTaskId === d.id} />
+      ))}
+      <AddNewCard disabled={!!editingTaskId} />
     </div>
   );
-}
-
-export default App;
+};

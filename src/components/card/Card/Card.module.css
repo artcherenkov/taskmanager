@@ -1,0 +1,35 @@
+.card {
+  background-color: white;
+  height: 180px;
+  padding: 16px 12px 12px;
+  position: relative;
+}
+
+.card_addNew {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editButtons {
+  margin-top: 4px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.controls {
+  left: 0;
+  padding: 0 12px;
+  top: 4px;
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.controlText {
+  font-size: 10px;
+  font-style: italic;
+  cursor: pointer;
+  text-transform: uppercase;
+}

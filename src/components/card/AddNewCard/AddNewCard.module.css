@@ -1,0 +1,9 @@
+.card {
+  background-color: white;
+  height: 180px;
+  padding: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
