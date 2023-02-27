@@ -15,6 +15,7 @@ import {
   updateTodo,
 } from "../../../store/appSlice";
 import { TTodoItem } from "../../../types";
+import { TestId } from "../../../test-ids";
 
 interface ICardProps {
   todo: {
@@ -71,7 +72,7 @@ export const Card = (props: ICardProps) => {
 
   if (isEditMode) {
     return (
-      <div className={styles.card}>
+      <div className={styles.card} data-testid={TestId.EDIT_MODE_CARD}>
         <TextField
           label="Что сделать?"
           variant="standard"
@@ -81,18 +82,19 @@ export const Card = (props: ICardProps) => {
           onChange={onTitleChange}
         />
         <div className={styles.editButtons}>
-          <IconButton onClick={onDeleteClick}>
+          <IconButton onClick={onDeleteClick} title="Delete task">
             <DeleteIcon />
           </IconButton>
           {!!todo.title && (
             <IconButton
               onClick={onRestoreClick}
               disabled={disableRestoreButton}
+              title="Restore task"
             >
               <RestoreIcon />
             </IconButton>
           )}
-          <IconButton onClick={onDoneClick}>
+          <IconButton onClick={onDoneClick} title="Save task">
             <CheckIcon />
           </IconButton>
         </div>
@@ -105,6 +107,7 @@ export const Card = (props: ICardProps) => {
       className={styles.card}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      data-testid={TestId.DEFAULT_CARD}
     >
       {showControls && (
         <div className={styles.controls}>

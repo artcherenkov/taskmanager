@@ -1,5 +1,6 @@
 import React from "react";
 import IconButton from "@mui/material/IconButton";
+import { nanoid } from "nanoid";
 
 import { AddIcon } from "../../icons";
 import styles from "./AddNewCard.module.css";
@@ -9,7 +10,7 @@ import {
   selectEditingTodoId,
   setEditingTodoId,
 } from "../../../store/appSlice";
-import { nanoid } from "nanoid";
+import { TestId } from "../../../test-ids";
 
 const createEmptyTodo = () => ({
   id: nanoid(),
@@ -28,7 +29,7 @@ export const AddNewCard = () => {
   };
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-testid={TestId.ADD_NEW_CARD}>
       <IconButton size="large" disabled={disabled} onClick={onClick}>
         <AddIcon size={32} color={disabled ? "#f1f1f1" : "#737373"} />
       </IconButton>

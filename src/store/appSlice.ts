@@ -29,7 +29,7 @@ export const counterSlice = createSlice({
     updateTodo: (state, action: PayloadAction<TTodoItem>) => {
       const { id } = action.payload;
       const todoToEditIdx = state.todos.findIndex((t) => t.id === id);
-      if (!todoToEditIdx) return;
+      if (todoToEditIdx === -1) return;
       state.todos[todoToEditIdx] = action.payload;
     },
     setEditingTodoId: (state, action: PayloadAction<string | null>) => {
